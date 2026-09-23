@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fenntárs</title>
+<meta name="description" content="Fenntárs — interaktív demográfiai, népesedéspolitikai és fenntarthatósági adatvizualizációk és írások.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAF8F2;
+    --paper:#FFFFFF;
+    --ink:#22312A;
+    --ink-dim:#66746A;
+    --ink-faint:#8B968D;
+    --green:#3E6B52;
+    --red:#B65A46;
+    --blue:#5B84A6;
+    --rule:#E1DDCF;
+    --serif: "Newsreader", Georgia, serif;
+    --sans: "Inter", -apple-system, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:inherit;}
+  a:focus-visible, summary:focus-visible{outline:2px solid var(--green); outline-offset:3px;}
+
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:4.5rem 1.5rem 4rem;
+  }
+
+  header{margin-bottom:2.8rem;}
+
+  .kicker{
+    font-size:0.8rem;
+    font-weight:500;
+    letter-spacing:0.04em;
+    color:var(--green);
+    margin:0 0 0.9rem;
+  }
+
+  h1{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(2.1rem, 5.5vw, 3rem);
+    line-height:1.1;
+    margin:0 0 1.1rem;
+    max-width:16ch;
+  }
+
+  .lede{
+    font-size:1.06rem;
+    color:var(--ink-dim);
+    max-width:58ch;
+    margin:0 0 0.9rem;
+  }
+  .lede:last-child{margin-bottom:0;}
+  .lede strong{color:var(--ink); font-weight:500;}
+
+  .motif{margin:2.4rem 0 0.4rem; max-width:380px;}
+  .motif-row{
+    display:grid;
+    grid-template-columns:1fr 2px 1fr;
+    align-items:center;
+    height:9px;
+    margin-bottom:6px;
+  }
+  .motif-row .red{background:var(--red); height:100%; justify-self:end; border-radius:1px 0 0 1px;}
+  .motif-row .spine{background:var(--rule); height:100%;}
+  .motif-row .blue{background:var(--blue); height:100%; border-radius:0 1px 1px 0;}
+
+  section.theme{
+    margin-top:3.4rem;
+    padding-top:2.2rem;
+    border-top:1px solid var(--rule);
+  }
+
+  .theme-head{
+    display:flex;
+    align-items:baseline;
+    gap:0.6rem;
+    margin-bottom:0.9rem;
+  }
+  .theme-emoji{font-size:1.2rem;}
+  h2{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:1.5rem;
+    margin:0;
+  }
+
+  .theme-intro{
+    font-size:0.98rem;
+    color:var(--ink-dim);
+    max-width:58ch;
+    margin:0 0 1.6rem;
+  }
+
+  h3{
+    font-size:0.8rem;
+    font-weight:600;
+    letter-spacing:0.02em;
+    color:var(--ink-faint);
+    margin:1.6rem 0 0.8rem;
+  }
+
+  .link-card{
+    display:block;
+    background:var(--paper);
+    border:1px solid var(--rule);
+    border-radius:6px;
+    padding:1rem 1.25rem;
+    text-decoration:none;
+    margin-bottom:0.7rem;
+    transition:border-color 0.15s ease, transform 0.15s ease;
+  }
+  .link-card:hover, .link-card:focus-visible{border-color:var(--green); transform:translateX(3px);}
+  .link-card .title{
+    font-family:var(--serif);
+    font-size:1.08rem;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:1rem;
+  }
+  .link-card .badge{
+    font-family:var(--sans);
+    font-size:0.7rem;
+    font-weight:600;
+    letter-spacing:0.03em;
+    color:var(--green);
+    white-space:nowrap;
+  }
+  .link-card .arrow{font-family:var(--sans); font-size:0.95rem; color:var(--ink-faint); flex-shrink:0;}
+
+  .plain-list{list-style:none; margin:0 0 0.5rem; padding:0;}
+  .plain-list li{
+    border-bottom:1px solid var(--rule);
+  }
+  .plain-list li:last-child{border-bottom:none;}
+  .plain-list a{
+    display:block;
+    padding:0.7rem 0.1rem;
+    text-decoration:none;
+    font-size:0.96rem;
+  }
+  .plain-list a:hover{color:var(--green);}
+
+  details{margin-top:0.6rem;}
+  summary{
+    cursor:pointer;
+    font-size:0.9rem;
+    font-weight:500;
+    color:var(--green);
+    padding:0.4rem 0;
+    list-style:none;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"+ "; }
+  details[open] summary::before{content:"– ";}
+
+  footer{
+    margin-top:3.6rem;
+    padding-top:1.6rem;
+    border-top:1px solid var(--rule);
+    font-size:0.85rem;
+    color:var(--ink-dim);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:0.6rem;
+  }
+  footer a{text-decoration:underline; text-decoration-color:var(--rule); text-underline-offset:3px;}
+  footer a:hover{text-decoration-color:var(--green);}
+
+  @media (max-width:480px){
+    .wrap{padding:3rem 1.25rem 3rem;}
+    footer{flex-direction:column;}
+  }
+  @media (prefers-reduced-motion: reduce){ .link-card{transition:none;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="kicker">Fenntárs</p>
+    <h1>Fenntartható társadalom, fenntartható népesedés</h1>
+    <p class="lede">A Fenntárs a természeti erőforrások fenntartható használatát és a népesedési egyensúly kérdését két egymást erősítő szálon dolgozza fel: <strong>környezet- és fenntarthatósági politika</strong>, valamint <strong>demográfia és népesedéspolitika</strong>.</p>
+    <p class="lede">Interaktív adatvizualizációk, kalkulátorok és háttérírások — magyar és európai statisztikákra (KSH, Eurostat, OECD) építve, hogy a témák saját adatokon, összehasonlítva legyenek végiggondolhatók.</p>
+  </header>
+
+  <div class="motif" aria-hidden="true">
+    <div class="motif-row"><div class="red" style="width:70%"></div><div class="spine"></div><div class="blue" style="width:35%"></div></div>
+    <div class="motif-row"><div class="red" style="width:40%"></div><div class="spine"></div><div class="blue" style="width:60%"></div></div>
+  </div>
+
+  <section class="theme">
+    <div class="theme-head">
+      <span class="theme-emoji">🌍</span>
+      <h2>Fenntarthatóság és környezetpolitika</h2>
+    </div>
+    <p class="theme-intro">Az éghajlatváltozás, a környezetvédelem és a nyugdíjrendszer fenntarthatósága közös nevezőn: mennyit élünk fel a jövő generációk erőforrásaiból, és hogyan lehetne ezt egyensúlyba hozni — akár egy vállalat, akár egy ország szintjén.</p>
+
+    <a class="link-card" href="https://gydeak.github.io/climatechange/">
+      <span class="title">Éghajlatváltozás Magyarország, Európa, Világ <span class="arrow">↦</span></span>
+    </a>
+    <a class="link-card" href="https://gydeak.github.io/fenntarskalkulator/">
+      <span class="title">Vállalati demográfiai fenntarthatósági kalkulátor <span class="arrow">↦</span></span>
+    </a>
+
+    <details>
+      <summary>Kapcsolódó írások (9)</summary>
+      <ul class="plain-list">
+        <li><a href="https://levegominoseg.blogspot.com/2025/06/fenntarthato-joletsustainable-wealth.html">Fenntartható jólét / Sustainable wealth</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/06/fenntarthato-termekenysegsustainable.html">Fenntartható termékenység / Sustainable fertility</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/06/fenntarthatosag-kicsit-maskepp.html">Fenntarthatóság új megközelítésben</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/06/fenntarthatosag-kornyezetvedelemben.html">Fenntarthatóság a környezetvédelemben</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/05/fenntarthato-nepesseg.html">Fenntartható népesség definíciója</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2024/10/fenntarthato-nyugdijrendszer-bevezetesi.html">Fenntartható nyugdíjrendszer bevezetési terve</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2024/07/demografiai-fenntarthatosagi-kitetel-az.html">Demográfiai fenntarthatósági kitétel az Alkotmányban</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2023/10/fenntarthato-nyugdijrendszer.html">Fenntartható nyugdíjrendszer modellje</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2021/12/kornyezetvedelem-magyarorszagon.html">Környezetvédelem Magyarországon</a></li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="theme">
+    <div class="theme-head">
+      <span class="theme-emoji">👶</span>
+      <h2>Demográfia és népesedéspolitika</h2>
+    </div>
+    <p class="theme-intro">Termékenységi ráta, migrációs egyenleg és családtámogatási rendszerek Magyarországon és Európában — negyedévente frissülő interaktív eszközökkel és az adatok mögötti összefüggéseket feltáró írásokkal.</p>
+
+    <h3>Interaktív eszközök</h3>
+    <a class="link-card" href="/familyfriendly/">
+      <span class="title">Családbarát országrangsor <span class="badge">Élő oldal</span></span>
+    </a>
+    <a class="link-card" href="https://lookerstudio.google.com/reporting/facce118-0727-461d-98f7-6253f8e6ef08">
+      <span class="title">Gyermekszületések Magyarországon 1960-tól <span class="arrow">↦</span></span>
+    </a>
+    <a class="link-card" href="https://gydeak.github.io/TFRvisualization/">
+      <span class="title">Teljes termékenységi arány Európában <span class="arrow">↦</span></span>
+    </a>
+    <a class="link-card" href="https://gydeak.github.io/migration30/">
+      <span class="title">Generációs migrációs egyenleg Európában <span class="arrow">↦</span></span>
+    </a>
+    <a class="link-card" href="https://gydeak.github.io/MigrationRate/">
+      <span class="title">Migrációs egyenleg állampolgárság szerint <span class="arrow">↦</span></span>
+    </a>
+    <a class="link-card" href="https://gydeak.github.io/CohortFertilityByAge">
+      <span class="title">Azonos életkorú nők gyermekvállalása Európában <span class="arrow">↦</span></span>
+    </a>
+    <a class="link-card" href="https://gydeak.github.io/CumulativeCohortFertilityByYearOfBirth">
+      <span class="title">Európai országok évfolyam-termékenysége <span class="arrow">↦</span></span>
+    </a>
+
+    <details>
+      <summary>Kapcsolódó írások (34)</summary>
+      <ul class="plain-list">
+        <li><a href="https://levegominoseg.blogspot.com/2025/12/gyermekvallalas-es-vallas.html">Gyermekvállalás és vallás</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/10/hogyan-lehetunk-10-millioan-2050-te-egy.html">Hogyan lehetünk 10 millióan 2050-re? Egy TISZA ígéret nyomában</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/10/csaladi-bevetel-kalkulator.html">Családi bevétel kalkulátor</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/10/csaladi-jovedelem-kalkulator-tisza-vs.html">Családi jövedelem – Tisza vs FIDESZ</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/10/penzt-vagy-eletet-satan-matematikaja.html">Pénzt vagy életet – a Sátán matematikája</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/09/kinek-jo-tisza-uj-adorendszere.html">Kinek jó a Tisza új adórendszere?</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/07/teljes-termekenysegi-arany-europabantfr.html">Teljes termékenységi arány Európában (TFR)</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/07/tfr-carpatian-basin.html">Teljes termékenységi arány a Kárpát-medencében</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/07/tfr-carpathian-basin-relativeteljes.html">Teljes termékenységi arány relatív teljesítmény a Kárpát-medencében</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/06/teljes-termekenysegi-mutato.html">Teljes termékenységi mutató állampolgárság szerint</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/05/fektessunk-az-egeszsegugybe-hogy-tovabb.html">Fektessünk az egészségügybe, hogy tovább éljünk</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/05/hany-embereletet-nyernenk-ha-ugyanannyi.html">Hány emberéletet nyernénk, ha ugyanannyi ideig élnénk, mint Csehországban?</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/04/csaladtamogatasok-rendszervaltas-ota.html">Családtámogatások a rendszerváltás óta</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/03/mekkora-csaladtamogatast-iger-fidesz.html">Mekkora családtámogatást ígér a Fidesz 2026-ra?</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/03/csaladtamogatasi-licit-2-akkor-most-ki.html">Családtámogatási licit (2. rész)</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/02/mikor-szuletett-legkevesebb-gyermek.html">Mikor született a legkevesebb gyermek Magyarországon?</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/02/a-gyermekvallalasi-dontes-anyagi.html">A gyermekvállalási döntés anyagi szabadságát megteremtő családtámogatási rendszer</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/02/csaladtamogatasi-licit-elkezdodott.html">Családtámogatási licit (kezdet)</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2025/01/nepmozgalmi-adatok-helyessege-hanyan-is.html">Népmozgalmi adatok helyessége – hányan is vagyunk?</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2024/12/sorsok-termekenysegi-mintazatok-mogott.html">Sorsok a termékenységi mintázatok mögött</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2024/10/degressziv-csed-es-gyed.html">Degresszív CSED és GYED</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2024/10/gyermekneveles-elismerese-az-oecd.html">Gyermeknevelés elismerése az OECD tagországok nyugdíjrendszereiben</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2024/07/az-europai-kihalasi-verseny-allasa-2023.html">Európai kihalási verseny állása 2023</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2024/03/sikeres-demografiai-fordulat.html">Sikeres demográfiai fordulat</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2023/09/europai-kihalos-verseny-allasa-2022.html">Európai kihalási verseny állása 2022</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2023/07/csehorszag-is-elesett.html">Csehország is elesett, bezuhanó születésszámok</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2023/03/osszeuropai-kihalos-verseny-allasa-2021.html">Európai kihalási verseny állása 2021</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2023/02/mitoszvadaszat-azert-nem-szuletik-eleg.html">Mítoszvadászat – azért nem születik elég gyermek, mert rossz az oktatás</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2023/02/mitoszvadaszat-az-abortuszok-miatt.html">Mítoszvadászat – az abortuszok miatt nem születik elég gyermek</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2023/02/mitoszvadaszat-azert-nem-szuletik-sok.html">Mítoszvadászat – azért nem születik sok gyermek, mert rossz az egészségügy</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2022/08/sikeres-e-fidesz-csaladtamogatasi.html">Sikeres-e a Fidesz családtámogatási politikája?</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2022/08/hogy-all-az-europai-kihalos-verseny.html">Európai kihalási verseny állása 2020?</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2022/03/kivandorlasi-paradoxon-avagy-miert.html">Kivándorlási paradoxon</a></li>
+        <li><a href="https://levegominoseg.blogspot.com/2021/12/nepszaporulat-magyarorszagon.html">Népszaporulat Magyarországon</a></li>
+      </ul>
+    </details>
+  </section>
+
+  <footer>
+    <span>Forrás: KSH, Eurostat, OECD</span>
+    <a href="https://github.com/fenntars" target="_blank" rel="noopener">GitHub</a>
+  </footer>
+
+</div>
+</body>
+</html>
